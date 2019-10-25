@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	"xinyu/go_splitter/broker"
+	//"xinyu/go_splitter/component"
 )
 
 var (
@@ -45,29 +46,29 @@ func (*consumerGroupHandler) Cleanup(_ sarama.ConsumerGroupSession) error { retu
 
 func (h *consumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
-		//fmt.Println(msg.Offset,";",msg.Key)
 		fmt.Println(string(msg.Value))
-		//encodeStr :=hex.EncodeToString(msg)
 
-		//var m broker.Message
 
-		//if err := h.kopts.Codec.Unmarshal(msg.Value, &m); err != nil {
-		//	println("解析失败", err)
-		//	continue
-		//}
-		//
-		//err := h.handler(&publication{
-		//	m:    &m,
-		//	t:    msg.Topic,
-		//	km:   msg,
-		//	cg:   h.cg,
-		//	sess: sess,
-		//})
-		//
-		//if err == nil && h.subopts.AutoAck {
-		//	sess.MarkMessage(msg, "")
-		//}
-		sess.MarkMessage(msg, "")
+		var m broker.Message
+
+
+		if err := h.kopts.Codec.Unmarshal(msg.Value, &m); err != nil {
+			println("解析失败", err)
+			continue
+		}
+
+		err := h.handler(&publication{
+			m:    &m,
+			t:    msg.Topic,
+			km:   msg,
+			cg:   h.cg,
+			sess: sess,
+		})
+
+		if err == nil && h.subopts.AutoAck {
+			sess.MarkMessage(msg, "")
+		}
+		//sess.MarkMessage(msg, "")
 	}
 	return nil
 }
