@@ -2,7 +2,6 @@ package kafka
 
 import (
 	"context"
-	"fmt"
 	"github.com/Shopify/sarama"
 	"xinyu/go_splitter/broker"
 	//"xinyu/go_splitter/component"
@@ -46,16 +45,13 @@ func (*consumerGroupHandler) Cleanup(_ sarama.ConsumerGroupSession) error { retu
 
 func (h *consumerGroupHandler) ConsumeClaim(sess sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for msg := range claim.Messages() {
-		fmt.Println(string(msg.Value))
+		//fmt.Println(string(msg.Value))
 
-
-		var m broker.Message
-
-
-		if err := h.kopts.Codec.Unmarshal(msg.Value, &m); err != nil {
-			println("解析失败", err)
-			continue
+		var m =broker.Message{
+			Body:msg.Value,
 		}
+
+
 
 		err := h.handler(&publication{
 			m:    &m,
