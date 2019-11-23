@@ -4,8 +4,7 @@
 
 　　
  
-	
-｀｀｀ 　　
+
           
 	github.com/elastic/go-elasticsearch/v7 
 	
@@ -21,4 +20,4 @@
 	
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	
-｀｀｀
+
